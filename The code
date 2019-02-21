@@ -1,3 +1,7 @@
+#include <ESP8266WiFi.h>
+
+const char* ssid     = "your-ssid";
+const char* password = "your-password";
 #define FR 5        // Enable/speed motor Front Right 
 #define BR 6        // Enable/speed motor Back Right
 #define FL 10       // Enable/speed motor Front Left
@@ -36,7 +40,25 @@ void setup() {
     pinMode(MD2_BLP, OUTPUT);
     pinMode(MD2_BLN, OUTPUT);
 
-  Serial.begin(115200); 
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  
+  WiFi.begin(ssid, password);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");  
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
 
   } 
 
