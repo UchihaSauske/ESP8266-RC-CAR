@@ -1,0 +1,231 @@
+#define FR 5        // Enable/speed motor Front Right 
+#define BR 6        // Enable/speed motor Back Right
+#define FL 10       // Enable/speed motor Front Left
+#define BL 11       // Enable/speed motor Back Left
+
+#define MD1_FRP  2        // L298N #1 in 1 motor Front Right
+#define MD1_FRN  3        // L298N #1 in 2 motor Front Right
+#define MD1_FLP  4        // L298N #1 in 3 motor Back Right
+#define MD1_FLN  7        // L298N #1 in 4 motor Back Right
+
+#define MD2_BRP  8        // L298N #2 in 1 motor Front Left
+#define MD2_BRN  9        // L298N #2 in 2 motor Front Left
+#define MD2_BLP  12       // L298N #2 in 3 motor Back Left
+#define MD2_BLN  13       // L298N #2 in 4 motor Back Left
+
+int command;            //Int to store app command state.
+int speedCar = 150;     // 50 - 255.
+int speed_Coeff = 4;
+boolean lightFront = false;
+boolean horn = false;
+
+void setup() {  
+    
+    pinMode(FR, OUTPUT);
+    pinMode(BR, OUTPUT);
+    pinMode(FL, OUTPUT);
+    pinMode(BL, OUTPUT);
+  
+    pinMode(MD1_FRP, OUTPUT);
+    pinMode(MD1_FRN, OUTPUT);
+    pinMode(MD2_BRP, OUTPUT);
+    pinMode(MD2_BRN, OUTPUT);
+    
+    pinMode(MD1_FLP, OUTPUT);
+    pinMode(MD1_FLN, OUTPUT);
+    pinMode(MD2_BLP, OUTPUT);
+    pinMode(MD2_BLN, OUTPUT);
+
+  Serial.begin(115200); 
+
+  } 
+
+void goAhead(){ 
+
+      digitalWrite(MD1_FRP, HIGH);
+      digitalWrite(MD1_FRN, LOW);
+      analogWrite(FR, speedCar);
+
+      digitalWrite(MD1_FLP, HIGH);
+      digitalWrite(MD1_FLN, LOW);
+      analogWrite(BR , speedCar);
+
+
+      digitalWrite(MD2_BRP, HIGH);
+      digitalWrite(MD2_BRN, LOW);
+      analogWrite(FL, speedCar);
+
+
+      digitalWrite(MD2_BLP, HIGH);
+      digitalWrite(MD2_BLN, LOW);
+      analogWrite(BL, speedCar);
+
+  }
+
+void goBack(){ 
+
+      digitalWrite(MD1_FRP, LOW);
+      digitalWrite(MD1_FRN, HIGH);
+      analogWrite(FR, speedCar);
+
+      digitalWrite(MD1_FLP, LOW);
+      digitalWrite(MD1_FLN, HIGH);
+      analogWrite(BR , speedCar);
+
+
+      digitalWrite(MD2_BRP, LOW);
+      digitalWrite(MD2_BRN, HIGH);
+      analogWrite(FL, speedCar);
+
+
+      digitalWrite(MD2_BLP, LOW);
+      digitalWrite(MD2_BLN, HIGH);
+      analogWrite(BL, speedCar);
+
+  }
+
+void goRight(){ 
+
+      digitalWrite(MD1_FLP, HIGH);
+      digitalWrite(MD1_FLN, LOW);
+      analogWrite(FR, speedCar);
+
+
+      digitalWrite(MD2_BRN, HIGH);
+      digitalWrite(MD2_BRP, LOW);
+      analogWrite(BR, speedCar);
+
+
+      digitalWrite(MD2_BLN, LOW);
+      digitalWrite(MD2_BLP, HIGH);
+      analogWrite(BL, speedCar);
+
+
+      digitalWrite(MD1_FLP, HIGH);
+      digitalWrite(MD1_FLN, LOW);
+      analogWrite(FL, speedCar);
+
+
+  }
+
+void goLeft(){
+
+      digitalWrite(MD1_FRP, HIGH);
+      digitalWrite(MD1_FRN, LOW);
+      analogWrite(FR, speedCar);
+
+
+      digitalWrite(MD1_FLP, LOW);
+      digitalWrite(MD1_FLN, HIGH);
+      analogWrite(BR, speedCar);
+
+        
+      digitalWrite(MD2_BRP, HIGH);
+      digitalWrite(MD2_BRN, LOW);
+      analogWrite(FL, speedCar);
+
+
+      digitalWrite(MD2_BLP, LOW);
+      digitalWrite(MD2_BLN, HIGH);
+      analogWrite(BL, speedCar);
+
+        
+  }
+
+void goBackLeft(){ 
+
+      digitalWrite(MD1_FRP, LOW);
+      digitalWrite(MD1_FRN, HIGH);
+      analogWrite(FR, speedCar);
+
+
+      digitalWrite(MD2_BRN, HIGH);
+      digitalWrite(MD2_BRP, LOW);
+      analogWrite(BR, speedCar);
+
+
+      digitalWrite(MD1_FLN, HIGH);
+      digitalWrite(MD1_FLP, LOW);
+      analogWrite(FL, speedCar/speed_Coeff);
+
+ 
+      digitalWrite(MD2_BLP, LOW);
+      digitalWrite(MD2_BLN, HIGH);
+      analogWrite(BL, speedCar/speed_Coeff);
+
+  }
+
+void goBackRight(){ 
+
+      digitalWrite(MD1_FRP, LOW);
+      digitalWrite(MD1_FRN, HIGH);
+      analogWrite(FR, speedCar/speed_Coeff);
+
+
+      digitalWrite(MD2_BRN, HIGH);
+      digitalWrite(MD2_BRP, LOW);
+      analogWrite(BR, speedCar/speed_Coeff);
+
+
+      digitalWrite(MD1_FLN, HIGH);
+      digitalWrite(MD1_FLP, LOW);
+      analogWrite(FL, speedCar);
+
+ 
+      digitalWrite(MD2_BLP, LOW);
+      digitalWrite(MD2_BLN, HIGH);
+      analogWrite(BL, speedCar);
+
+  }
+
+
+void stopRobot(){  
+
+      digitalWrite(MD1_FRP, LOW);
+      digitalWrite(MD1_FRN, LOW);
+      analogWrite(FR, speedCar);
+
+
+      digitalWrite(MD1_FLP, LOW);
+      digitalWrite(MD1_FLN, LOW);
+      analogWrite(BR, speedCar);
+
+  
+      digitalWrite(MD2_BLP, LOW);
+      digitalWrite(MD2_BLN, LOW);
+      analogWrite(BL, speedCar);
+
+      
+      digitalWrite(MD2_BRP, LOW);
+      digitalWrite(MD2_BRN, LOW);
+      analogWrite(FL, speedCar);
+  
+  }
+  
+void loop(){
+    
+if (Serial.available() > 0) {
+  command = Serial.read();
+  
+
+switch (command) {
+case 'F':goAhead();break;
+case 'B':goBack();break;
+case 'L':goLeft();break;
+case 'R':goRight();break;
+case 'J':goBackRight();break;
+case 'H':goBackLeft();break;
+case '0':speedCar = 100;break;
+case '1':speedCar = 120;break;
+case '2':speedCar = 135;break;
+case '3':speedCar = 155;break;
+case '4':speedCar = 170;break;
+case '5':speedCar = 185;break;
+case '6':speedCar = 195;break;
+case '7':speedCar = 215;break;
+case '8':speedCar = 235;break;
+case '9':speedCar = 255;break;
+case 'S':stopRobot();break;
+}
+}
+}
